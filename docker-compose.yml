@@ -2,11 +2,11 @@ version: '3'
 services:
   db-odoo15:
     image: postgres:latest
-    container_name: Odoo_sales_DB
+    container_name: Odoo_15_DB
 
-    networks:
-        default:
-           ipv4_address: 172.28.0.22
+#    networks:
+#        default:
+#           ipv4_address: 172.28.0.22
     environment:
       - POSTGRES_PASSWORD=odoo
       - POSTGRES_USER=odoo
@@ -20,18 +20,18 @@ services:
     user: root
     depends_on:
       - db-odoo15
-    container_name: Odoo_sales_15
+    container_name: Odoo_15
     ports:
       - "15069:8069"
-    networks:
-        default:
-           ipv4_address: 172.28.0.23
+ #   networks:
+ #       default:
+ #          ipv4_address: 172.28.0.23
     environment:
       - HOST=db-odoo15
       - USER=odoo
       - PASSWORD=odoo
 #    command:
-#      odoo -u all -d nolte-sales
+#      odoo -u all -d dbname_to_update
     tty: true
     volumes:
       - odoo15-data:/var/lib/odoo
