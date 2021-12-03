@@ -1,0 +1,55 @@
+version: '3'
+services:
+  db-odoo15:
+    image: postgres:latest
+    container_name: Odoo_sales_DB
+
+    networks:
+        default:
+           ipv4_address: 172.28.0.22
+    environment:
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+      - POSTGRES_DB=postgres
+    volumes:
+      - odoo15-db-data:/var/lib/postgresql/data
+    restart: always 
+    user: root
+  odoo15:
+    image: odoo:15
+    user: root
+    depends_on:
+      - db-odoo15
+    container_name: Odoo_sales_15
+    ports:
+      - "15069:8069"
+    networks:
+        default:
+           ipv4_address: 172.28.0.23
+    environment:
+      - HOST=db-odoo15
+      - USER=odoo
+      - PASSWORD=odoo
+#    command:
+#      odoo -u all -d nolte-sales
+    tty: true
+    volumes:
+      - odoo15-data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./entrypoint.sh:/entrypoint.sh
+      - ./addons:/mnt/extra-addons
+      - ./backup:/var/lib/odoo/backups
+    restart: always
+
+
+ 
+networks:
+   default:  
+     external: 
+       name: nginx-proxy
+
+volumes:
+    odoo15-db-data:
+    odoo15-data:
+
+
